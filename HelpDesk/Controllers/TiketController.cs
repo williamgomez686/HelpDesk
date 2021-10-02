@@ -23,8 +23,16 @@ namespace HelpDesk.Controllers
             {
                 using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
+
+                    string cadena = @"select tk_id as No_Tiket, u.usu_nick as Usuario,u2.urg_desc as Nivel_Urgencia, t.tk_asu as Asunto, t.tk_desc as Descripcion, tk_fchalt as Fecha
+	                            from tickes t 
+		                            inner join usuarios u 
+			                            on t.usu_id = u.usu_id 
+		                            inner join urgencia u2 
+			                            on t.urg_id = u2.urg_id
+                                order by t.tk_fchalt ";
                     db.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand("select * from tickes", db))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
                     {
                         cmd.CommandType = System.Data.CommandType.Text;
                         using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
@@ -32,8 +40,8 @@ namespace HelpDesk.Controllers
                             while (dr.Read())
                             {
                                 oTiket = new Tiket();
-                                oTiket.Tk_Id = (int)dr["Tk_Id"];
-                                oTiket.Usu_Id = (int)dr["Usu_Id"];
+                                oTiket.Tk_Id = (int)dr["No_Tiket"];
+                                oTiket.Usu_Id = dr["Usuario"].ToString();
                                 oTiket.Ar_Pro_Id = (int)dr["Ar_Pro_Id"];
                                 oTiket.Urg_Id = (int)dr["Urg_Id"];
                                 oTiket.Est_Id = (int)dr["Est_Id"];
@@ -64,7 +72,6 @@ namespace HelpDesk.Controllers
         {
             List<Tiket> list = new List<Tiket>();
             Tiket oTiket = null;
-            DataTable dataTable = new DataTable();
 
             try
             {

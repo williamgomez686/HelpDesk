@@ -4,30 +4,28 @@
     ViewData["Title"] = "Tikets";
 }
 
-<h1 class="text-center">Estos son Sus Tikets</h1>
+<h1 class="text-center">Informacion del tiket numero </h1>
 <hr />
-
-
 <br />
 
         @foreach (var item in Model)
         { 
-                    
+                    <label>Numero de Tiket: @item.Tk_Id</label>
             <div class="card">
-                <div class="card-header">
-                   
-                    <label> @item.Tk_Asu</label>
-                </div>
-                <div class="card-body">
-                    <textarea rows="4" cols="30">@item.Tk_Desc</textarea>
+                <div class="card-header text-center">                   
+                    <label class="text-center "> @item.Tk_Asu</label>
                     
                 </div>
                 <div class="card-body">
+                    
+                    @item.Tk_Desc
+                </div>
+                <div class="card-body text-right">
                     <label>Fecha del Tiket  @Html.DisplayFor(modelItem => item.Tk_FchAlt)</label>
                     <label>Numero de Estencion  @Html.DisplayFor(modelItem => item.Tk_TelCom)</label>                                
                 </div>
 
-                <div class="form-control">
+                <div class="form-control text-center">
                     <label>Nivel de Urgencia @Html.DisplayFor(modelItem => item.Urg_Id) </label>
                     <label>Estado @Html.DisplayFor(modelItem => item.Est_Id)</label>
                 </div>
