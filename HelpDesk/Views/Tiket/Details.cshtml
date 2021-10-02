@@ -9,41 +9,29 @@
 
 
 <br />
-<table class="table table-bordered table-hover">
-    <tbody>
+
         @foreach (var item in Model)
-        {
-            <tr>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Usu_Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ar_Pro_Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Urg_Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Est_Id)
-                </td>
-   
-
-            </tr>
+        { 
+                    
             <div class="card">
                 <div class="card-header">
-                    @item.Tk_Asu
+                   
+                    <label> @item.Tk_Asu</label>
                 </div>
                 <div class="card-body">
-                    @item.Tk_Desc
+                    <textarea rows="4" cols="30">@item.Tk_Desc</textarea>
+                    
                 </div>
                 <div class="card-body">
-                    @Html.DisplayFor(modelItem => item.Tk_FchAlt)
-                    @Html.DisplayFor(modelItem => item.Tk_TelCom)
+                    <label>Fecha del Tiket  @Html.DisplayFor(modelItem => item.Tk_FchAlt)</label>
+                    <label>Numero de Estencion  @Html.DisplayFor(modelItem => item.Tk_TelCom)</label>                                
+                </div>
+
+                <div class="form-control">
+                    <label>Nivel de Urgencia @Html.DisplayFor(modelItem => item.Urg_Id) </label>
+                    <label>Estado @Html.DisplayFor(modelItem => item.Est_Id)</label>
                 </div>
             </div>
         }
-    </tbody>
-</table>
 
 
