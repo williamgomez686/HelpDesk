@@ -1,0 +1,73 @@
+﻿@model IEnumerable<HelpDesk.Models.Usuarios>
+
+@{
+    ViewBag.titulo = "Usuarios";
+}
+
+<h1 class="text-center">@ViewBag.titulo</h1>
+
+<div>
+    @Html.ActionLink("Back to List", "add")
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th class="bg-light">
+                <label>Id</label>
+            </th>
+            <th class="bg-light">
+                <label>Nombre</label>
+            </th>
+            <th class="bg-light">
+                <label>Apellido</label>
+            </th>
+            <th class="bg-light">
+                <label>Usuario</label>
+            </th>
+            <th class="bg-light">
+                <label>Password</label>
+            </th>
+            <th class="bg-light">
+                <label>Fecha de Nacimiento</label>
+            </th>
+            <th class="bg-light">
+                <label>Accines</label>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.apellido)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.usuario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fecha_nacimiento)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ @class = "fas fa - plus - square" })
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

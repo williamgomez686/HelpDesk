@@ -1,0 +1,80 @@
+﻿@model IEnumerable<HelpDesk.Models.Tiket>
+
+@{
+    ViewData["Title"] = "Tikets";
+}
+
+<h1 class="text-center">Estos son Sus Tikets</h1>
+<hr />
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket</a>
+</p>
+<br />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="bg-light">
+               <label>Usuario</label>
+            </th>
+            <th class="bg-light">
+                <label>Area</label>
+            </th>
+            <th class="bg-light">
+                <label>Urgencia</label>
+            </th>
+            <th class="bg-light">
+                <label>Estado</label>
+            </th>
+            <th class="bg-light">
+                <label>Asunto</label>
+            </th>
+            <th class="bg-light">
+                <label>Descripcion</label>
+            </th>
+            <th class="bg-light">
+                <label>Fecha alta</label>
+            </th>
+            <th class="bg-light">
+                <label>Extencion</label>
+            </th>
+            <th class="bg-light">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Usu_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ar_Pro_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Urg_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Est_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tk_Asu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tk_Desc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tk_FchAlt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tk_TelCom)
+            </td>
+            <td>
+                <a class="btn btn-success" href="~/Tiket/Edit/@item.Tk_Id">Info</a> |
+                <a class="btn btn-primary" href="~/Tiket/Details/@item.Tk_Id">Info</a> |
+                <a class="btn btn-danger" href="~/Tiket/Delete/@item.Tk_Id">Info</a>)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.titulo = "Login";
+}
+
+<hr />
+<br />
+<div class="col-md-4 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Inicia Sesion</h3>
+        </div>
+
+        <div class="card-body">
+            <form id="frm">
+                <div class="form-group">
+                    <input type="text" name="usuario" class="form-control" placeholder="Usuario" autofocus />
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Contraseña" autofocus />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success form-control" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+    {
+    <script>
+    $(document).ready(function () {
+        $("#frm").submit(function (e) {
+            e.preventDefault();
+
+            url = "@Url.Content("~/Login/Enter")"
+            parametros = $(this).serialize();
+
+            $.post(url, parametros, function(data) {
+
+                if (data == "1") {
+                    document.location.href = "@Url.Content("~/")";
+                }
+                else {
+                    alert(data)
+                }
+
+            })
+        })
+    })
+    </script>
+}
