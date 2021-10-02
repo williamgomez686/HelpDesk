@@ -7,40 +7,9 @@
 <h1 class="text-center">Estos son Sus Tikets</h1>
 <hr />
 
-<p>
-    <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket</a>
-</p>
+
 <br />
 <table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th class="bg-light">
-                <label>Usuario</label>
-            </th>
-            <th class="bg-light">
-                <label>Area</label>
-            </th>
-            <th class="bg-light">
-                <label>Urgencia</label>
-            </th>
-            <th class="bg-light">
-                <label>Estado</label>
-            </th>
-            <th class="bg-light">
-                <label>Asunto</label>
-            </th>
-            <th class="bg-light">
-                <label>Descripcion</label>
-            </th>
-            <th class="bg-light">
-                <label>Fecha alta</label>
-            </th>
-            <th class="bg-light">
-                <label>Extencion</label>
-            </th>
-            <th class="bg-light">Acciones</th>
-        </tr>
-    </thead>
     <tbody>
         @foreach (var item in Model)
         {
@@ -58,30 +27,19 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Est_Id)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tk_Asu)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tk_Desc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tk_FchAlt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tk_TelCom)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    <a class="btn btn-primary" href="~/Tiket/Details/@item.Tk_Id">Info</a> |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
+   
+
             </tr>
             <div class="card">
                 <div class="card-header">
-                    prueba
+                    @item.Tk_Asu
                 </div>
                 <div class="card-body">
                     @item.Tk_Desc
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(modelItem => item.Tk_FchAlt)
+                    @Html.DisplayFor(modelItem => item.Tk_TelCom)
                 </div>
             </div>
         }
