@@ -1,43 +1,36 @@
-﻿@model IEnumerable<HelpDesk.Models.Tiket>
+﻿@model IEnumerable<HelpDesk.Models.VistaParcial.ViewTiket>
 
 @{
     ViewData["Title"] = "Tikets";
 }
 
-<h1 class="text-center">Estos son Sus Tikets</h1>
+<h1 class="text-center">Estos son Sus Tikets <i class="fas fa-ticket-alt"></i> </h1>
 <hr />
 
 <p>
-    <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket</a>
+    <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket <i class="fas fa-plus-circle"></i></a>
 </p>
 <br />
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th class="bg-light">
-               <label>Usuario</label>
+               <label>Numero de Tiket</label>
             </th>
             <th class="bg-light">
-                <label>Area</label>
+                <label>Usuario</label>
             </th>
             <th class="bg-light">
-                <label>Urgencia</label>
-            </th>
-            <th class="bg-light">
-                <label>Estado</label>
+                <label>Nivel de Urgencia</label>
             </th>
             <th class="bg-light">
                 <label>Asunto</label>
             </th>
-            <th class="bg-light">
-                <label>Descripcion</label>
-            </th>
+
             <th class="bg-light">
                 <label>Fecha alta</label>
             </th>
-            <th class="bg-light">
-                <label>Extencion</label>
-            </th>
+            
             <th class="bg-light">Acciones</th>
         </tr>
     </thead>
@@ -46,33 +39,24 @@
         <tr>
 
             <td>
-                @Html.DisplayFor(modelItem => item.Usu_Id)
+                @Html.DisplayFor(modelItem => item.No_Tiket)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ar_Pro_Id)
+                @Html.DisplayFor(modelItem => item.NombreUsuario)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Urg_Id)
+                @Html.DisplayFor(modelItem => item.nivUrgencia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Est_Id)
+                @Html.DisplayFor(modelItem => item.Asunto)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FechadeTiket)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tk_Asu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tk_Desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tk_FchAlt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tk_TelCom)
-            </td>
-            <td>
-                <a class="btn btn-success" href="~/Tiket/Edit/@item.Tk_Id">Info</a> |
-                <a class="btn btn-primary" href="~/Tiket/Details/@item.Tk_Id">Info</a> |
-                <a class="btn btn-danger" href="~/Tiket/Delete/@item.Tk_Id">Info</a>)
+                <a class="btn btn-primary" href="~/Tiket/Details/@item.No_Tiket"><i class="fas fa-eye"></i></a> 
+                <a class="btn btn-danger" href="~/Tiket/Delete/@item.No_Tiket"><i class="far fa-trash-alt"> </i></a>
             </td>
         </tr>
 }
