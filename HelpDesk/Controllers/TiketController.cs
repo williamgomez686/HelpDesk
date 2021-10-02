@@ -1,4 +1,5 @@
 ﻿using HelpDesk.Models;
+using HelpDesk.Models.VistaParcial;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -15,16 +16,15 @@ namespace HelpDesk.Controllers
         // GET: TiketController
         public ActionResult Index()
         {
-            List<Tiket> list = new List<Tiket>();
-            Tiket oTiket = null;
-            DataTable dataTable = new DataTable();
+            List<ViewTiket> list = new List<ViewTiket>();
+            ViewTiket oTiket = null;
 
             try
             {
                 using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
 
-                    string cadena = @"select tk_id as No_Tiket, u.usu_nick as Usuario,u2.urg_desc as Nivel_Urgencia, t.tk_asu as Asunto, t.tk_desc as Descripcion, tk_fchalt as Fecha
+                    string cadena = @"select tk_id as No_Tiket, u.usu_nick as Usuario, u2.urg_desc as Nivel_Urgencia, t.tk_asu as Asunto, t.tk_desc as Descripcion, tk_fchalt as Fecha
 	                            from tickes t 
 		                            inner join usuarios u 
 			                            on t.usu_id = u.usu_id 
@@ -39,20 +39,14 @@ namespace HelpDesk.Controllers
                         {
                             while (dr.Read())
                             {
-                                oTiket = new Tiket();
-                                oTiket.Tk_Id = (int)dr["No_Tiket"];
-                                oTiket.Usu_Id = dr["Usuario"].ToString();
-                                oTiket.Ar_Pro_Id = (int)dr["Ar_Pro_Id"];
-                                oTiket.Urg_Id = (int)dr["Urg_Id"];
-                                oTiket.Est_Id = (int)dr["Est_Id"];
-                                oTiket.Tk_Asu = dr["Tk_Asu"].ToString();
-                                oTiket.Tk_Desc = dr["Tk_Desc"].ToString();
-                                oTiket.Tk_FchAlt = (DateTime)dr["Tk_FchAlt"];
-                                oTiket.Tk_TelCom = dr["Tk_TelCom"].ToString();
-                                oTiket.Tk_Sol = dr["Tk_Sol"].ToString();
-                                //oTiket.Tk_FchSol = (DateTime)dr["Tk_FchSol"];
-                               // oTiket.Tk_FchMod = (DateTime)dr["Tk_FchMod"];
-                                oTiket.Tk_UsuTec = dr["Tk_UsuTec"].ToString();
+                                oTiket = new ViewTiket();
+                                oTiket.No_Tiket = (int)dr["No_Tiket"];
+                                oTiket.NombreUsuario = dr["Usuario"].ToString();
+                                oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                                oTiket.Asunto = dr["Asunto"].ToString();
+                                oTiket.Descripcion = dr["Descripcion"].ToString();
+                                oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+                              
                                 list.Add(oTiket);
                             }
                         }
