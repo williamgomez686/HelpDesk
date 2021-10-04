@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using HelpDesk.Metodos;
 
 namespace HelpDesk.Controllers
 {
-    public class TiketController : Controller
+    public class TiketController : Controller 
     {
         // GET: TiketController
         public ActionResult Index()
@@ -23,7 +24,6 @@ namespace HelpDesk.Controllers
             {
                 using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
-
                     string cadena = @"select tk_id as No_Tiket, u.usu_nick as Usuario, u2.urg_desc as Nivel_Urgencia, t.tk_asu as Asunto, t.tk_desc as Descripcion, tk_fchalt as Fecha
 	                            from tickes t 
 		                            inner join usuarios u 
@@ -31,7 +31,7 @@ namespace HelpDesk.Controllers
 		                            inner join urgencia u2 
 			                            on t.urg_id = u2.urg_id
                                 where est_id = 1
-                                order by t.tk_fchalt ";
+                                order by t.tk_fchalt";
                     db.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
                     {
@@ -47,7 +47,9 @@ namespace HelpDesk.Controllers
                                 oTiket.Asunto = dr["Asunto"].ToString();
                                 oTiket.Descripcion = dr["Descripcion"].ToString();
                                 oTiket.FechadeTiket = (DateTime)dr["Fecha"];
-                              
+
+                                oTiket.suma(4,5);
+
                                 list.Add(oTiket);
                             }
                         }
@@ -145,42 +147,8 @@ namespace HelpDesk.Controllers
             }
             try
             {
-                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
-                {
-                    db.Open();
-                    var cadena = @"INSERT INTO tickes
-                                    (usu_id, ar_pro_id, urg_id, est_id, tk_asu, tk_desc, tk_fchalt, tk_telcom)
-                                        VALUES(:Usu_Id, :Ar_Pro_Id, :Urg_Id, :Est_Id, :Tk_Asu, :Tk_Desc, :Tk_FchAlt, :Tk_TelCom);";
-
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
-                    {
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.Parameters.AddWithValue(":Usu_Id", model.Usu_Id);
-                        cmd.Parameters.AddWithValue(":Ar_Pro_Id", model.Ar_Pro_Id);
-                        cmd.Parameters.AddWithValue(":Urg_Id", model.Urg_Id);
-                        cmd.Parameters.AddWithValue(":Est_Id", 1);
-                        cmd.Parameters.AddWithValue(":Tk_Asu", model.Tk_Asu);
-                        cmd.Parameters.AddWithValue(":Tk_Desc", model.Tk_Desc);
-                        cmd.Parameters.AddWithValue(":Tk_FchAlt", DateTime.Now);
-                        cmd.Parameters.AddWithValue(":Tk_TelCom", model.Tk_TelCom);
-                        cmd.ExecuteNonQuery();
-                    }
-                    //using (NpgsqlCommand cmd = new NpgsqlCommand("SP_Add_tiket", db))
-                    //{
-                    //    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Usu_Id", NpgsqlTypes.NpgsqlDbType.Integer)).Value = model.Usu_Id;                    
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Ar_Pro_Id", NpgsqlTypes.NpgsqlDbType.Integer)).Value = model.Ar_Pro_Id;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Urg_Id", NpgsqlTypes.NpgsqlDbType.Integer)).Value = model.Urg_Id;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Est_Id", NpgsqlTypes.NpgsqlDbType.Integer)).Value = model.Tk_Asu;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Tk_Asu", NpgsqlTypes.NpgsqlDbType.Varchar)).Value =  model.Tk_Asu;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Tk_Desc", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.Tk_Desc;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Tk_FchAlt", NpgsqlTypes.NpgsqlDbType.Date)).Value = model.Tk_FchAlt;
-                    //    cmd.Parameters.Add(new NpgsqlParameter("p_Tk_TelCom", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.Tk_TelCom;
-                    //    cmd.ExecuteNonQuery();
-                    //    //result = Convert.ToString(cmd.Parameters["P_RESULT"].Value);
-                    //    //return View("Index");
-                    //}
-                } 
+                MetodosTiket Agregar = new MetodosTiket();
+                Agregar.Agrear_Ticket(model);
 
             }
             catch (Exception ex)
@@ -212,24 +180,99 @@ namespace HelpDesk.Controllers
         }
 
         // GET: TiketController/Delete/5
+        [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View();
+            List<ViewTiket> list = new List<ViewTiket>();
+            ViewTiket oTiket = null;
+
+            try
+            {
+                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+                {
+                    string cadena = @"select tk_id as No_Tiket,
+	                                        u.usu_nick as Usuario,
+	                                        a.ar_desc as Area_informatica,
+		                                    u2.urg_desc as Nivel_Urgencia,
+		                                    e.est_desc  as estado,
+		                                    t.tk_asu as Asunto, 
+		                                    t.tk_desc as Descripcion, 
+		                                    tk_fchalt as Fecha, 
+		                                    t.tk_telcom as TelExt,
+		                                    t.tk_sol as Solucion
+	                                    from tickes t 
+		                                    inner join usuarios u on t.usu_id = u.usu_id 
+		                                    inner join urgencia u2 on t.urg_id = u2.urg_id
+		                                    inner join area_problemas ap on t.ar_pro_id = ap.arpro_id 
+	 	                                    inner join area a on ap.ar_id = a.ar_id
+	 	                                    inner join estado e on t.est_id = e.est_id 
+                                    where t.tk_id =" + id;
+                    db.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
+                    {
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+                        {
+                            while (dr.Read())
+                            {
+                                oTiket = new ViewTiket();
+                                oTiket.No_Tiket = (int)dr["No_Tiket"];
+                                oTiket.NombreUsuario = (dr)["Usuario"].ToString();
+                                oTiket.AreaInf = dr["Area_informatica"].ToString();
+                                oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                                oTiket.Estado = dr["estado"].ToString();
+                                oTiket.Asunto = dr["Asunto"].ToString();
+                                oTiket.Descripcion = dr["Descripcion"].ToString();
+                                oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+                                oTiket.TelExt = dr["TelExt"].ToString();
+                                oTiket.solucion = dr["Solucion"].ToString();
+                                ViewBag.NoTiket = oTiket.No_Tiket;
+                                list.Add(oTiket);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("Error " + ex.Message);
+            }
+            //Eliminar_sql(oTiket.No_Tiket); ;
+            return View(list.ToList());
         }
 
         // POST: TiketController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpGet]
+
+        public ActionResult Delete_confirm(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                MetodosTiket Eliminar = new MetodosTiket();
+                Eliminar.Eliminar_sql(id);
             }
             catch
             {
-                return View();
+                return View("Index");
             }
+            return Redirect(Url.Content("~/Tiket/Index"));
         }
+
+        
+
+        //private static void Metodo_Eliminar(int id)
+        //{
+        //    using (NpgsqlConnection db = new NpgsqlConnection("HOST=127.0.0.1;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+        //    {
+        //        db.Open();
+        //        using (NpgsqlCommand cmd = new NpgsqlCommand("SP_Update_stat2", db))
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.Parameters.Add(new NpgsqlParameter("P_tk_id", id ));
+        //            cmd.Parameters.Add(new NpgsqlParameter("P_est_id", 4));
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
     }
 }

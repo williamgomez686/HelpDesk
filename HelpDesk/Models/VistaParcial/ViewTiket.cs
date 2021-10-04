@@ -17,5 +17,11 @@ namespace HelpDesk.Models.VistaParcial
         public DateTime FechadeTiket { get; set; }
         public string TelExt { get; set; }
         public string solucion { get; set; }
+
+        public int suma(int a, int b)
+        {
+            var res = a + b;
+            return res;
+        }
     }
 }

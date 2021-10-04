@@ -88,5 +88,29 @@ namespace HelpDesk.Controllers
                 }
            return Redirect(Url.Content("~/Usuarios/Index"));
         }
+
+        public IActionResult Edit(int id)
+        {
+            List<Usuarios> list = new List<Usuarios>();
+            try
+            {
+                using (NpgsqlConnection db = new NpgsqlConnection("HOST=127.0.0.1;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+                {
+                    db.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand("SP_Update_users", db))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new NpgsqlParameter("P_user_id", NpgsqlTypes.NpgsqlDbType.Integer)).Value = id;
+                        cmd.Parameters.Add(new NpgsqlParameter("P_est_id", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = "hola_mundo";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("error" + ex.Message);
+            }
+            return View(list);
+        }
     }
 }

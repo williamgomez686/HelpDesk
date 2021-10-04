@@ -1,0 +1,31 @@
+﻿@model IEnumerable<HelpDesk.Models.VistaParcial.ViewTiket>
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-danger text-center">Desea eliminar el Ticket: @ViewBag.NoTiket?</h1>
+<hr />
+<br />
+@foreach (var item in Model)
+{
+
+    <form method="post">
+        <div class="card">
+            <div class="card-header text-center">
+                @item.Asunto
+            </div>
+            <div class="card-body">
+                @item.Descripcion
+            </div>
+        </div>
+
+        <div class="form-group">
+
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-danger" href="~/Tiket/Delete_confirm/@item.No_Tiket">Eliminar</a>
+            <a class="btn btn-primary" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+}
+
