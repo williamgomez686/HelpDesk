@@ -22,7 +22,7 @@ namespace HelpDesk.Controllers
                 using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
                     db.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(@"select * from Usuarios", db))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(@"select * from usuarios", db))
                     {
                         cmd.CommandType = System.Data.CommandType.Text;
                         using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
@@ -30,12 +30,12 @@ namespace HelpDesk.Controllers
                             while (dr.Read())
                             {
                                 clie = new SistemUser();
-                                clie.Usuarioid = (int)dr["Usu_id"];
-                                clie.Empleadoid = (int)dr["EmpLabId"];
-                                clie.Nikname = dr["Usu_Nick"].ToString();
-                                clie.Password = dr["Usu_Pass"].ToString();
-                                clie.NivelUsuario = (int)dr["Usu_Niv"];
-                                clie.estado = dr["Usu_Est"].ToString();
+                                clie.Usuarioid = (int)dr["usu_id"];
+                                clie.Empleadoid = (int)dr["emplab_id"];
+                                clie.Nikname = dr["usu_nick"].ToString();
+                                clie.Password = dr["usu_pass"].ToString();
+                                clie.NivelUsuario = (int)dr["usu_niv"];
+                                clie.estado = dr["usu_est"].ToString();
                                 list.Add(clie);
                             }
                         }

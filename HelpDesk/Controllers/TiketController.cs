@@ -30,6 +30,7 @@ namespace HelpDesk.Controllers
 			                            on t.usu_id = u.usu_id 
 		                            inner join urgencia u2 
 			                            on t.urg_id = u2.urg_id
+                                where est_id = 1
                                 order by t.tk_fchalt ";
                     db.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
@@ -64,35 +65,50 @@ namespace HelpDesk.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            List<Tiket> list = new List<Tiket>();
-            Tiket oTiket = null;
+            List<ViewTiket> list = new List<ViewTiket>();
+            ViewTiket oTiket = null;
 
             try
             {
                 using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
+                    string cadena = @"select tk_id as No_Tiket,
+	                                    u.usu_nick as Usuario,
+	                                    a.ar_desc as Area_informatica,
+		                                    u2.urg_desc as Nivel_Urgencia,
+		                                    e.est_desc  as estado,
+		                                    t.tk_asu as Asunto, 
+		                                    t.tk_desc as Descripcion, 
+		                                    tk_fchalt as Fecha, 
+		                                    t.tk_telcom as TelExt,
+		                                    t.tk_sol as Solucion
+	                                    from tickes t 
+		                                    inner join usuarios u on t.usu_id = u.usu_id 
+		                                    inner join urgencia u2 on t.urg_id = u2.urg_id
+		                                    inner join area_problemas ap on t.ar_pro_id = ap.arpro_id 
+	 	                                    inner join area a on ap.ar_id = a.ar_id
+	 	                                    inner join estado e on t.est_id = e.est_id 
+                                    where t.tk_id =" + id;
                     db.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand("select * from tickes where tk_id =" + id , db))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
                     {
                         cmd.CommandType = System.Data.CommandType.Text;
                         using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
                         {
                             while (dr.Read())
                             {
-                                oTiket = new Tiket();
-                                oTiket.Tk_Id = (int)dr["tk_id"];
-                                oTiket.Usu_Id = (int)dr["usu_id"];
-                                oTiket.Ar_Pro_Id = (int)dr["ar_pro_id"];
-                                oTiket.Urg_Id = (int)dr["urg_id"];
-                                oTiket.Est_Id = (int)dr["est_id"];
-                                oTiket.Tk_Asu = dr["tk_asu"].ToString();
-                                oTiket.Tk_Desc = dr["tk_desc"].ToString();
-                                oTiket.Tk_FchAlt = (DateTime)dr["tk_fchalt"];
-                                oTiket.Tk_TelCom = dr["tk_telcom"].ToString();
-                                oTiket.Tk_Sol = dr["tk_sol"].ToString();
-                                //oTiket.Tk_FchSol = (DateTime)dr["Tk_FchSol"];
-                                // oTiket.Tk_FchMod = (DateTime)dr["Tk_FchMod"];
-                                //oTiket.Tk_UsuTec = dr["Tk_UsuTec"].ToString();
+                                oTiket = new ViewTiket();
+                                oTiket.No_Tiket = (int)dr["No_Tiket"];
+                                oTiket.NombreUsuario = (dr)["Usuario"].ToString();
+                                oTiket.AreaInf = dr["Area_informatica"].ToString();
+                                oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                                oTiket.Estado = dr["estado"].ToString();
+                                oTiket.Asunto = dr["Asunto"].ToString();
+                                oTiket.Descripcion = dr["Descripcion"].ToString();
+                                oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+                                oTiket.TelExt = dr["TelExt"].ToString();
+                                oTiket.solucion = dr["Solucion"].ToString();
+                                ViewBag.NoTiket = oTiket.No_Tiket;
                                 list.Add(oTiket);
                             }
                         }
@@ -101,7 +117,7 @@ namespace HelpDesk.Controllers
             }
             catch (Exception ex)
             {
-                return Content("error" + ex.Message);
+                return Content("Error " + ex.Message);
             }
 
             //var detail = from d in list

@@ -9,9 +9,13 @@ namespace HelpDesk.Models.VistaParcial
     {
         public int No_Tiket { get; set; }
         public string NombreUsuario { get; set; }
+        public string AreaInf { get; set; }
         public string nivUrgencia { get; set; }
+        public string Estado { get; set; }
         public string Asunto { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechadeTiket { get; set; }
+        public string TelExt { get; set; }
+        public string solucion { get; set; }
     }
 }

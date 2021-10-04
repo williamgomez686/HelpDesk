@@ -1,35 +1,32 @@
-﻿@model IEnumerable<HelpDesk.Models.Tiket>
+﻿@model IEnumerable<HelpDesk.Models.VistaParcial.ViewTiket>
 
 @{
     ViewData["Title"] = "Tikets";
 }
 
-<h1 class="text-center">Informacion del tiket numero </h1>
+<h3 class="text-center">Ticket Numero @ViewBag.NoTiket </h3>
 <hr />
-<br />
 
-        @foreach (var item in Model)
-        { 
-                    <label>Numero de Tiket: @item.Tk_Id</label>
-            <div class="card">
-                <div class="card-header text-center">                   
-                    <label class="text-center "> @item.Tk_Asu</label>
-                    
-                </div>
-                <div class="card-body">
-                    
-                    @item.Tk_Desc
-                </div>
-                <div class="card-body text-right">
-                    <label>Fecha del Tiket  @Html.DisplayFor(modelItem => item.Tk_FchAlt)</label>
-                    <label>Numero de Estencion  @Html.DisplayFor(modelItem => item.Tk_TelCom)</label>                                
-                </div>
 
-                <div class="form-control text-center">
-                    <label>Nivel de Urgencia @Html.DisplayFor(modelItem => item.Urg_Id) </label>
-                    <label>Estado @Html.DisplayFor(modelItem => item.Est_Id)</label>
-                </div>
-            </div>
-        }
+@foreach (var item in Model)
+{
+    <label>Fecha:    @Html.DisplayFor(modelItem => item.FechadeTiket)</label>
+    <div><label> Extención: @Html.DisplayFor(modelItem => item.TelExt)</label></div>
+    <div class="card">
+        <div class="card-header text-center">
+            <label class="text-center h5"> @item.Asunto</label>
+
+        </div>
+        <div class="card-body">
+
+            @item.Descripcion
+        </div>
+
+        <div class="form-control text-center">
+            <label>Nivel de Urgencia: @Html.DisplayFor(modelItem => item.nivUrgencia) </label>
+            <label>Estado: @Html.DisplayFor(modelItem => item.Estado)</label>
+        </div>
+    </div>
+}
 
 
