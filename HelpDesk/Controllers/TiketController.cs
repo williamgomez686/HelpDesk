@@ -184,13 +184,24 @@ namespace HelpDesk.Controllers
         public ActionResult Delete(int id)
         {
             List<ViewTiket> list = new List<ViewTiket>();
-            ViewTiket oTiket = null;
-
             try
             {
-                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
-                {
-                    string cadena = @"select tk_id as No_Tiket,
+                Muesta_paraEliminar(id, list);
+            }
+            catch (Exception ex)
+            {
+                return Content("Error " + ex.Message);
+            }
+            //Eliminar_sql(oTiket.No_Tiket); ;
+            return View(list.ToList());
+        }
+
+        private void Muesta_paraEliminar(int id, List<ViewTiket> list)
+        {
+            ViewTiket oTiket = null;
+            using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+            {
+                string cadena = @"select tk_id as No_Tiket,
 	                                        u.usu_nick as Usuario,
 	                                        a.ar_desc as Area_informatica,
 		                                    u2.urg_desc as Nivel_Urgencia,
@@ -207,38 +218,31 @@ namespace HelpDesk.Controllers
 	 	                                    inner join area a on ap.ar_id = a.ar_id
 	 	                                    inner join estado e on t.est_id = e.est_id 
                                     where t.tk_id =" + id;
-                    db.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
+                db.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
                     {
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+                        while (dr.Read())
                         {
-                            while (dr.Read())
-                            {
-                                oTiket = new ViewTiket();
-                                oTiket.No_Tiket = (int)dr["No_Tiket"];
-                                oTiket.NombreUsuario = (dr)["Usuario"].ToString();
-                                oTiket.AreaInf = dr["Area_informatica"].ToString();
-                                oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
-                                oTiket.Estado = dr["estado"].ToString();
-                                oTiket.Asunto = dr["Asunto"].ToString();
-                                oTiket.Descripcion = dr["Descripcion"].ToString();
-                                oTiket.FechadeTiket = (DateTime)dr["Fecha"];
-                                oTiket.TelExt = dr["TelExt"].ToString();
-                                oTiket.solucion = dr["Solucion"].ToString();
-                                ViewBag.NoTiket = oTiket.No_Tiket;
-                                list.Add(oTiket);
-                            }
+                            oTiket = new ViewTiket();
+                            oTiket.No_Tiket = (int)dr["No_Tiket"];
+                            oTiket.NombreUsuario = (dr)["Usuario"].ToString();
+                            oTiket.AreaInf = dr["Area_informatica"].ToString();
+                            oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                            oTiket.Estado = dr["estado"].ToString();
+                            oTiket.Asunto = dr["Asunto"].ToString();
+                            oTiket.Descripcion = dr["Descripcion"].ToString();
+                            oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+                            oTiket.TelExt = dr["TelExt"].ToString();
+                            oTiket.solucion = dr["Solucion"].ToString();
+                            ViewBag.NoTiket = oTiket.No_Tiket;
+                            list.Add(oTiket);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                return Content("Error " + ex.Message);
-            }
-            //Eliminar_sql(oTiket.No_Tiket); ;
-            return View(list.ToList());
         }
 
         // POST: TiketController/Delete/5
