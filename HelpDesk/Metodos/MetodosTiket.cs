@@ -1,4 +1,5 @@
 ﻿using HelpDesk.Models;
+using HelpDesk.Models.VistaParcial;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,8 @@ namespace HelpDesk.Metodos
     public class MetodosTiket
     {
         public string CadenaConexion = "HOST=192.168.1.136;Port=5432; User Id=postgres;Password=1nfabc123;Database = postgres;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20";
-        public void Eliminar_sql(int id)
+        public void Eliminar_sql(int id)/// este metodo hace un borrado logico ya que solo cabia el estatus a eliminado si borrar el registro de la base de datos
+
         {
             using (NpgsqlConnection db = new NpgsqlConnection(CadenaConexion))
             {
@@ -29,7 +31,92 @@ namespace HelpDesk.Metodos
             }
         }
 
-        public void Agrear_Ticket(Tiket model)
+        public ViewTiket Listar_Tickets(List<ViewTiket> list, ViewTiket oTiket)
+        {
+            using (NpgsqlConnection db = new NpgsqlConnection(CadenaConexion))
+            {
+                string cadena = @"select tk_id as No_Tiket, u.usu_nick as Usuario, u2.urg_desc as Nivel_Urgencia, t.tk_asu as Asunto, t.tk_desc as Descripcion, tk_fchalt as Fecha
+	                            from tickes t 
+		                            inner join usuarios u 
+			                            on t.usu_id = u.usu_id 
+		                            inner join urgencia u2 
+			                            on t.urg_id = u2.urg_id
+                                where est_id = 1
+                                order by t.tk_fchalt";
+                db.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+                    {
+                        while (dr.Read())
+                        {
+                            oTiket = new ViewTiket();
+                            oTiket.No_Tiket = (int)dr["No_Tiket"];
+                            oTiket.NombreUsuario = dr["Usuario"].ToString();
+                            oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                            oTiket.Asunto = dr["Asunto"].ToString();
+                            oTiket.Descripcion = dr["Descripcion"].ToString();
+                            oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+
+                            list.Add(oTiket);
+                        }
+                    }
+                }
+            }
+            return oTiket;
+        }
+        public ViewTiket Detalles_Tiket(int id, List<ViewTiket> list, ViewTiket oTiket)/// Muestra detalles del Ticket lo manda a llamar el controlador TicketController en el metodo Details
+        {
+            using (NpgsqlConnection db = new NpgsqlConnection(CadenaConexion))
+            {
+                string cadena = @"select tk_id as No_Tiket,
+	                                    u.usu_nick as Usuario,
+	                                    a.ar_desc as Area_informatica,
+		                                    u2.urg_desc as Nivel_Urgencia,
+		                                    e.est_desc  as estado,
+		                                    t.tk_asu as Asunto, 
+		                                    t.tk_desc as Descripcion, 
+		                                    tk_fchalt as Fecha, 
+		                                    t.tk_telcom as TelExt,
+		                                    t.tk_sol as Solucion
+	                                    from tickes t 
+		                                    inner join usuarios u on t.usu_id = u.usu_id 
+		                                    inner join urgencia u2 on t.urg_id = u2.urg_id
+		                                    inner join area_problemas ap on t.ar_pro_id = ap.arpro_id 
+	 	                                    inner join area a on ap.ar_id = a.ar_id
+	 	                                    inner join estado e on t.est_id = e.est_id 
+                                    where t.tk_id =" + id;
+                db.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    using (NpgsqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+                    {
+                        while (dr.Read())
+                        {
+                            oTiket = new ViewTiket();
+                            oTiket.No_Tiket = (int)dr["No_Tiket"];
+                            oTiket.NombreUsuario = (dr)["Usuario"].ToString();
+                            oTiket.AreaInf = dr["Area_informatica"].ToString();
+                            oTiket.nivUrgencia = dr["Nivel_Urgencia"].ToString();
+                            oTiket.Estado = dr["estado"].ToString();
+                            oTiket.Asunto = dr["Asunto"].ToString();
+                            oTiket.Descripcion = dr["Descripcion"].ToString();
+                            oTiket.FechadeTiket = (DateTime)dr["Fecha"];
+                            oTiket.TelExt = dr["TelExt"].ToString();
+                            oTiket.solucion = dr["Solucion"].ToString();
+                            //ViewBag.NoTiket = oTiket.No_Tiket;
+                            list.Add(oTiket);
+                        }
+                    }
+                }
+            }
+
+            return oTiket;
+        }
+
+        public void Agrear_Ticket(Tiket model)//este metodo hace un Update a la base de datos y lo llama el TicketController en el metodo Add
         {
             using (NpgsqlConnection db = new NpgsqlConnection(CadenaConexion))
             {

@@ -4,8 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-<h4>Tiket</h4>
+<h1>Agrege un nuevo Ticket</h1>
+
 <hr />
     <div class="col-md-6">
 </div>
@@ -39,8 +39,9 @@
                 <input asp-for="Tk_TelCom" class="form-control" />
                 <span asp-validation-for="Tk_TelCom" class="text-danger"></span>
             </div>
+        <br />
             <div class="col-md-4">
-                <label for="inputState" class="form-label">State</label>
+                <label for="inputState" class="form-label">Nivel de Urgencia: </label>
                 <select id="inputState" class="form-select" name="Tk_Asu">
                     <option selected>Elija...</option>
                     <option value="Tk_Asu" selected="">Tk_Asu</option>
@@ -52,7 +53,7 @@
                 <input asp-for="Urg_Id" class="form-control" />
                 <span asp-validation-for="Urg_Id" class="text-danger"></span>
             </div>
-
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -60,7 +61,7 @@
 
 
         <div>
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="Index">Regresar</a>
         </div>
 
         @section Scripts {
