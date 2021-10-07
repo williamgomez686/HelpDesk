@@ -11,54 +11,30 @@
     <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket <i class="fas fa-plus-circle"></i></a>
 </p>
 <br />
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th class="bg-light">
-               <label>Numero de Tiket</label>
-            </th>
-            <th class="bg-light">
-                <label>Usuario</label>
-            </th>
-            <th class="bg-light">
-                <label>Nivel de Urgencia</label>
-            </th>
-            <th class="bg-light">
-                <label>Asunto</label>
-            </th>
 
-            <th class="bg-light">
-                <label>Fecha alta</label>
-            </th>
-            
-            <th class="bg-light">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.No_Tiket)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nivUrgencia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Asunto)
-            </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.FechadeTiket)
-            </td>
-            <td>
-                <a class="btn btn-primary" href="~/Tiket/Details/@item.No_Tiket"><i class="fas fa-eye"></i></a> 
-                <a class="btn btn-danger" href="~/Tiket/Delete/@item.No_Tiket"><i class="far fa-trash-alt"> </i></a>
-            </td>
-        </tr>
+<div class="row">
+    @foreach (var item in Model) 
+{   
+<div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="text-center">
+                    Numero de Ticket   @Html.DisplayFor(modelItem => item.No_Tiket)
+                <a  class="fs-4" href="~/Tiket/Details/@item.No_Tiket"><i class="fas fa-eye"></i></a> 
+                <a class="" href="~/Tiket/Delete/@item.No_Tiket"><i class="far fa-trash-alt fs-1"> </i></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <label for="">@Html.DisplayFor(modelItem => item.Asunto)</label>
+            </div>
+            <div class="card-body fs-5">
+                <label class="fs-6 form-group">Usuario: @Html.DisplayFor(modelItem => item.NombreUsuario)</label>
+                <div>
+                         Fecha: @Html.DisplayFor(modelItem => item.FechadeTiket)
+                </div>
+            </div>
+        </div>
+</div>
 }
-    </tbody>
-</table>
+</div>
+

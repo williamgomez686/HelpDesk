@@ -41,10 +41,10 @@ namespace HelpDesk.Metodos
 			                            on t.usu_id = u.usu_id 
 		                            inner join urgencia u2 
 			                            on t.urg_id = u2.urg_id
-                               
-                                order by t.tk_fchalt";
+                                    
+                                order by t.tk_id desc";
 
-                                // where est_id = 1
+                                // 
                 db.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(cadena, db))
                 {
