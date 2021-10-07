@@ -19,7 +19,7 @@ namespace HelpDesk.Controllers
 
             try
             {
-                using (NpgsqlConnection db = new NpgsqlConnection("HOST=127.0.0.1;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.137;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
                     db.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand("select * from usuarios", db))
@@ -44,7 +44,7 @@ namespace HelpDesk.Controllers
             }
             catch (Exception ex)
             { 
-                return Content("error" + ex.Message);
+                return Content("Error en la base de datos: " + ex.Message);
             }
             return View(list);
         }
@@ -63,16 +63,16 @@ namespace HelpDesk.Controllers
             }
             try
                 {
-                using (NpgsqlConnection db = new NpgsqlConnection("HOST=127.0.0.1;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.137;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
                     db.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand("SP_Add_Users4", db))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
                         cmd.Parameters.Add(new NpgsqlParameter("p_nombre", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.nombre;
-                        //cmd.Parameters.Add(new NpgsqlParameter("p_apellido", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.apellido;
-                        //cmd.Parameters.Add(new NpgsqlParameter("p_usuario", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.usuario;
-                        //cmd.Parameters.Add(new NpgsqlParameter("p_pass", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.password;
+                        cmd.Parameters.Add(new NpgsqlParameter("p_apellido", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.apellido;
+                        cmd.Parameters.Add(new NpgsqlParameter("p_usuario", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.usuario;
+                        cmd.Parameters.Add(new NpgsqlParameter("p_pass", NpgsqlTypes.NpgsqlDbType.Varchar)).Value = model.password;
                         cmd.Parameters.Add(new NpgsqlParameter("p_fecha_nacimiento", NpgsqlTypes.NpgsqlDbType.Date)).Value = model.fecha_nacimiento;
                         cmd.ExecuteNonQuery();
                         //result = Convert.ToString(cmd.Parameters["P_RESULT"].Value);
@@ -84,7 +84,7 @@ namespace HelpDesk.Controllers
             }
             catch (Exception ex)
                 {
-                    return Content("error" + ex.Message);
+                    return Content("Error en la base de datos: " + ex.Message);
                 }
            return Redirect(Url.Content("~/Usuarios/Index"));
         }
@@ -94,7 +94,7 @@ namespace HelpDesk.Controllers
             List<Usuarios> list = new List<Usuarios>();
             try
             {
-                using (NpgsqlConnection db = new NpgsqlConnection("HOST=127.0.0.1;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
+                using (NpgsqlConnection db = new NpgsqlConnection("HOST=192.168.1.137;Port=5432; User Id=postgres;Password=1nfabc123;Database = dbmmc;TIMEOUT=15;POOLING=True;MINPOOLSIZE=1;MAXPOOLSIZE=20;COMMANDTIMEOUT=20"))
                 {
                     db.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand("SP_Update_users", db))
@@ -108,7 +108,7 @@ namespace HelpDesk.Controllers
             }
             catch (Exception ex)
             {
-                return Content("error" + ex.Message);
+                return Content("Error en la base de datos: " + ex.Message);
             }
             return View(list);
         }
