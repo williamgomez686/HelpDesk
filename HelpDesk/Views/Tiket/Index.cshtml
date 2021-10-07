@@ -10,7 +10,7 @@
 <p>
     <a class="btn btn-success" asp-action="Create">Crear Nuevo Tiket <i class="fas fa-plus-circle"></i></a>
 </p>
-<br />
+
 
 <div class="row">
     @foreach (var item in Model) 
@@ -18,7 +18,7 @@
 <div class="col-md-3 mb-4">
         <div class="card">
             <div class="card-header">
-                <div class="text-center">
+                <div class="text-center font-weight-bold">
                     Numero de Ticket   @Html.DisplayFor(modelItem => item.No_Tiket)
                 <a  class="fs-4" href="~/Tiket/Details/@item.No_Tiket"><i class="fas fa-eye"></i></a> 
                 <a class="" href="~/Tiket/Delete/@item.No_Tiket"><i class="far fa-trash-alt fs-1"> </i></a>
@@ -27,7 +27,7 @@
             <div class="card-body">
                 <label for="">@Html.DisplayFor(modelItem => item.Asunto)</label>
             </div>
-            <div class="card-body fs-5">
+            <div class="card-body fs-5 font-weight-light">
                 <label class="fs-6 form-group">Usuario: @Html.DisplayFor(modelItem => item.NombreUsuario)</label>
                 <div>
                          Fecha: @Html.DisplayFor(modelItem => item.FechadeTiket)
